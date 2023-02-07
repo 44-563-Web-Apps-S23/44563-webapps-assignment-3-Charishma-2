@@ -63,27 +63,27 @@
         <q>How to add and access custom php code in Wordpress site?</q>
         <a href="https://stackoverflow.com/questions/75366168/how-to-add-and-access-custom-php-code-in-wordpress-site">https://stackoverflow.com/questions/75366168/how-to-add-and-access-custom-php-code-in-wordpress-site</a>
         <pre>
-            <h3>All Post Meta</h3>
-
-            <?php 
-
-                // Get all the data 
-                 $getPostCustom = get_post_custom(); 
-
-                    foreach($getPostCustom as $name=>$value) {
-
-                        echo "<strong>" . $name . "</strong>"."  =>  ";
-
-                        foreach ($value as $nameAr=>$valueAr) {
-                                echo "<br />";
-                                echo $nameAr."  =>  ";
-                                echo var_dump($valueAr);
-                         }
-
-                         echo "<br /><br />";
-
-                            }
-            ?>
+            function exclude_post_categories($excl='', $spacer=' ') {
+                $categories = get_the_category(get_the_ID());
+                if (!empty($categories)) {
+                  $exclude = $excl;
+                  $exclude = explode(",", $exclude);
+                  $thecount = count(get_the_category()) - count($exclude);
+                  foreach ($categories as $cat) {
+                    $html = '';
+                    if (!in_array($cat->cat_ID, $exclude)) {
+                      $html .= '<a href="' . get_category_link($cat->cat_ID) . '" ';
+                      $html .= 'title="' . $cat->cat_name . '">' . $cat->cat_name . '</a>';
+                      if ($thecount > 0) {
+                        $html .= $spacer;
+                      }
+                      $thecount--;
+                      echo $html;
+                    }
+                  }
+                }
+              }
         </pre>
+        
     </body>
 </html>
